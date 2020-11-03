@@ -32,6 +32,7 @@ from kivy.core.camera import Camera as CoreCamera
 from kivy.properties import NumericProperty, ListProperty, \
     BooleanProperty
 
+camera = CoreCamera(index=0, resolution=[320,240], stopped=True)
 
 class Camera(Image):
     '''Camera class. See module documentation for more information.
@@ -78,7 +79,6 @@ class Camera(Image):
     :attr:`resolution` is a :class:`~kivy.properties.ListProperty` and defaults
     to [-1, -1].
     '''
-
     def __init__(self, **kwargs):
         self._camera = None
         super(Camera, self).__init__(**kwargs)
@@ -98,10 +98,11 @@ class Camera(Image):
         if self.index < 0:
             return
         if self.resolution[0] < 0 or self.resolution[1] < 0:
+            print('No default resolution')
             self._camera = CoreCamera(index=self.index, stopped=True)
         else:
-            self._camera = CoreCamera(index=self.index,
-                                  resolution=self.resolution, stopped=True)
+            print('Getting global camera')
+            self._camera = camera
         self._camera.bind(on_load=self._camera_loaded)
         if self.play:
             self._camera.start()
